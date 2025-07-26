@@ -1,5 +1,3 @@
-use std::iter::Enumerate;
-
 use rand::seq::IndexedRandom;
 
 use crate::input::Input;
@@ -26,6 +24,10 @@ pub enum Difficulty {
 }
 
 impl HangmanConfig {
+    /// Creates a new game state.
+    /// - Target word: picked at random from a premade list.
+    /// - Current word: Censored version of the target word.
+    /// - Remaining errors: Number ranging from 8 to 2 depending on the difficulty.
     pub fn new(difficulty: Difficulty) -> Self {
         let errors = match difficulty {
             Difficulty::Easy => 8,
@@ -43,6 +45,8 @@ impl HangmanConfig {
         }
     }
 
+    /// Handles the guess logic and returns the status of the guess, and if the game has been won
+    /// or lost.
     pub fn handle_guess(&mut self, guess: Input) -> GuessStatus {
         let guess = guess.input;
         let mut correct_guess = false;
@@ -75,6 +79,7 @@ impl Default for HangmanConfig {
     }
 }
 
+/// Generates a random word (used by the game config for generating the target word).
 fn generate_random_word() -> String {
     let words = [
         "banana", "astronaut", "tiger", "panther"
