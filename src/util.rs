@@ -1,10 +1,21 @@
+use std::iter::Enumerate;
+
 use rand::seq::IndexedRandom;
+
+use crate::input::Input;
 
 #[derive(Debug)]
 pub struct HangmanConfig {
     target_word: String,
-    current_word: String,
-    remaining_errors: u8,
+    pub current_word: String,
+    pub remaining_errors: u8,
+}
+
+pub enum GuessStatus {
+    Win,
+    Success,
+    Fail,
+    Loss
 }
 
 pub enum Difficulty {
@@ -32,8 +43,29 @@ impl HangmanConfig {
         }
     }
 
-    pub fn handle_guess(&self, guess: char) {
-        // for char in 
+    pub fn handle_guess(&mut self, guess: Input) -> GuessStatus {
+        let guess = guess.input;
+        let mut correct_guess = false;
+
+        for (i, char) in self.target_word.char_indices() {
+            if guess == char {
+                self.current_word.replace_range(i..i+1, char.to_string().as_str());
+                correct_guess = true;
+            }
+        }
+        if !correct_guess {
+            if self.remaining_errors == 0 {
+                return GuessStatus::Loss;
+            }
+            self.remaining_errors -= 1;
+            return GuessStatus::Fail;
+        }
+
+        if self.current_word == self.target_word {
+            return GuessStatus::Win;
+        }
+
+        GuessStatus::Success
     }
 }
 
