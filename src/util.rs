@@ -31,6 +31,10 @@ impl HangmanConfig {
             remaining_errors: errors, 
         }
     }
+
+    pub fn handle_guess(&self, guess: char) {
+        // for char in 
+    }
 }
 
 impl Default for HangmanConfig {
