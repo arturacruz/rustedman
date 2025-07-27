@@ -24,6 +24,7 @@ fn main() {
 
     let mut hangman = HangmanConfig::new(difficulty);
     loop {
+        hangman.draw_hangman();
         println!("{}", hangman.current_word);
         println!("You have {} remaining mistakes.", hangman.remaining_errors);
         println!("Make your guess: ");
@@ -36,7 +37,7 @@ fn main() {
             GuessStatus::Success => println!("You guessed correctly!"),
             GuessStatus::Fail => println!("Oops, your guess is wrong."),
             GuessStatus::Loss => { 
-                println!("You lose!");
+                println!("You lose! The word was {}.", hangman.target_word);
                 break;
             }
             GuessStatus::Win => {

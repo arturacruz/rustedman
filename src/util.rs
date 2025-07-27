@@ -1,12 +1,14 @@
+mod visual;
 use rand::seq::IndexedRandom;
-
+use visual::get_hangman_art;
 use crate::input::Input;
 
 #[derive(Debug)]
 pub struct HangmanConfig {
-    target_word: String,
+    pub target_word: String,
     pub current_word: String,
     pub remaining_errors: u8,
+    max_errors: u8,    
 }
 
 pub enum GuessStatus {
@@ -16,6 +18,7 @@ pub enum GuessStatus {
     Loss
 }
 
+#[derive(Debug)]
 pub enum Difficulty {
     Easy,
     Medium,
@@ -41,7 +44,8 @@ impl HangmanConfig {
         HangmanConfig { 
             target_word, 
             current_word,
-            remaining_errors: errors, 
+            remaining_errors: errors,
+            max_errors: errors
         }
     }
 
@@ -71,6 +75,11 @@ impl HangmanConfig {
 
         GuessStatus::Success
     }
+
+    pub fn draw_hangman(&self) {
+        let stage = ((6.0 / self.max_errors as f64) * (self.max_errors - self.remaining_errors) as f64) as u8;
+        println!("{}", get_hangman_art(&stage));
+    }
 }
 
 impl Default for HangmanConfig {
@@ -81,8 +90,12 @@ impl Default for HangmanConfig {
 
 /// Generates a random word (used by the game config for generating the target word).
 fn generate_random_word() -> String {
+    // let words = [
+    //     "banana", "astronaut", "tiger", "panther"
+    // ];
     let words = [
-        "banana", "astronaut", "tiger", "panther"
+        "banana", "coelho", "cachorro", "papagaio", "astronauta", "barriga", "contador", "computador", "financeiro",
+        "recuperado", "mestre", "quadro", "monitor"
     ];
     words.choose(&mut rand::rng()).unwrap().to_string()
 }
